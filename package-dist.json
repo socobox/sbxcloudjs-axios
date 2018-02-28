@@ -1,0 +1,27 @@
+{
+    "name": "sbx-axios",
+    "version": "1.0.0",
+    "description": "Sbxcore implementation with Axios",
+    "keywords": [
+        "axios",
+        "sbx"
+    ],
+    "main": "bundles/sbx.umd.min.js",
+    "module": "index.js",
+    "typings": "index.d.ts",
+    "author": {
+        "name": "Alexander Taborda Acosta",
+        "email": "alextab93@gmail.com"
+      },
+      "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sbxcloud/sbxcloudjs-axios.git"
+  },
+    "peerDependencies": {
+      "axios": "^0.18.0",
+      "rxjs": "^5.4.2",
+      "sbx-querybuilder": "^1.0.8",
+      "sbxcorejs": "^1.0.1"
+    }
+}
