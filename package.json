@@ -1,11 +1,11 @@
 {
   "name": "sbx-axios",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Sbxcore implementation with Axios",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf .tmp && rimraf dist",
-    "transpile": "ngc",
+    "transpile": "tsc",
     "package": "rollup -c",
     "minify": "./node_modules/uglify-js/bin/uglifyjs dist/bundles/sbx.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/sbx.umd.min.js",
     "copy": "cpx './package-dist.json' dist && renamer --find 'package-dist.json' --replace 'package.json' ./dist/*",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/sbxcloud/sbxcloudjs-axios#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "sbx-querybuilder": "^1.0.8",
     "sbxcorejs": "^1.4.0"

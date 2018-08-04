@@ -1,6 +1,6 @@
 {
     "name": "sbx-axios",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Sbxcore implementation with Axios",
     "keywords": [
         "axios",

@@ -1,19 +1,22 @@
 import resolve from 'rollup-plugin-node-resolve';
 
+const globals = {
+  'sbx-querybuilder/index': 'QueryBuilder',
+  'async/eachLimit': 'eachLimit',
+  'axios': 'axios',
+  'sbxcorejs': 'Find'
+};
+
 export default {
   input: 'dist/index.js',
   output: {
-    name: 'sbxcore',
+    name: 'sbxaxios',
     sourcemap: false,
-    file: 'dist/bundles/sbxcore.umd.js',
+    file: 'dist/bundles/sbx.umd.js',
     format: 'umd',
-    globals: {
-      'sbx-querybuilder/index': 'QueryBuilder'
-    }
+    globals: globals
   },
-  external: [
-    'sbx-querybuilder/index'
-  ],
+  external: Object.keys(globals),
   plugins: [
     resolve({
       module: true,
