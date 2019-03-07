@@ -56,7 +56,8 @@ export class SbxSessionService {
     this._user.name = data.user.name;
     this._user.login = data.user.login;
     this._user.email = data.user.email;
-    this.sbxCoreService.addHeaderAttr('token', data.token);
+    this.updateToken(data.token);
+    this.sbxCoreService.addHeaderAttr('authorization','Bearer ' + data.token);
   }
 
   /**
