@@ -1,6 +1,6 @@
 {
   "name": "sbx-axios",
-  "version": "0.0.3",
+  "version": "1.0.2",
   "description": "Sbxcore implementation with Axios",
   "keywords": [
     "sbxcore",
@@ -21,9 +21,9 @@
     "type": "git",
     "url": "git+https://github.com/sbxcloud/sbxcloudjs-axios.git"
   },
-  "peerDependencies": {
+  "dependencies": {
     "axios": "^0.18.0",
-    "rxjs": "^5.4.2",
+    "async": "^2.6.1",
     "sbx-querybuilder": "^1.0.8",
     "sbxcorejs": "^1.0.1"
   }
