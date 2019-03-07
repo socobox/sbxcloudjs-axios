@@ -242,7 +242,7 @@ export class AxiosFind extends Find {
   private totalPages;
 
   constructor(model: string, core: SbxCoreService) {
-    super(model, SbxCore.environment.domain);
+    super(model, SbxCoreService.environment.domain);
     this.core = core;
     this.totalPages = 1;
   }
