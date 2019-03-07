@@ -270,52 +270,55 @@ export class AxiosFind extends Find {
     this.setPageSize(1000);
     const query = this.query.compile();
 
-    waterfall([
-      (cb) => {
-        let items = [];
-        let fetched_results = {};
-        this.findPage(query).then(response => {
-          const data = response.data;
-          this.totalPages = data.total_pages;
-          items = items.concat(data.results);
-          if (data.fetched_results) {
-            fetched_results = data.fetched_results;
-          }
-          cb(null, items, data.total_pages, fetched_results);
-        }).catch(cb);
-      }, (items, total_pages, fetched, cb) => {
-        let fetched_results = fetched;
-
-        if (this.totalPages < 2) {
-          return cb(null, items, fetched_results);
-        }
-
-        let pages = new Array(this.totalPages).fill(0).map((_, i) => i + 1).slice(1);
-
-        eachLimit(pages, 5, (index, next) => {
-          query.page = index;
+    return new Promise((resolve, reject) => {
+      waterfall([
+        (cb) => {
+          let items = [];
+          let fetched_results = {};
           this.findPage(query).then(response => {
             const data = response.data;
-            if (data.fetched_results) {
-              Object.keys(data.fetched_results).forEach(function (model) {
-                if (!fetched_results.hasOwnProperty(model)) {
-                  fetched_results[model] = {};
-                }
-                Object.assign(fetched_results[model], data.fetched_results[model]);
-              });
-            }
+            this.totalPages = data.total_pages;
             items = items.concat(data.results);
-            next();
+            if (data.fetched_results) {
+              fetched_results = data.fetched_results;
+            }
+            cb(null, items, data.total_pages, fetched_results);
           }).catch(cb);
-        }, err => {
-          cb(err, items, fetched_results);
-        });
-      }
-    ], (error, items, fetched_results) => {
-      if (error) {
-        return Promise.reject(error);
-      }
-      return Promise.resolve({results: items, fetched_results: fetched_results});
+        }, (items, total_pages, fetched, cb) => {
+          let fetched_results = fetched;
+
+          if (this.totalPages < 2) {
+            return cb(null, items, fetched_results);
+          }
+
+          let pages = new Array(this.totalPages).fill(0).map((_, i) => i + 1).slice(1);
+
+          eachLimit(pages, 5, (index, next) => {
+            query.page = index;
+            this.findPage(query).then(response => {
+              const data = response.data;
+              if (data.fetched_results) {
+                Object.keys(data.fetched_results).forEach(function (model) {
+                  if (!fetched_results.hasOwnProperty(model)) {
+                    fetched_results[model] = {};
+                  }
+                  Object.assign(fetched_results[model], data.fetched_results[model]);
+                });
+              }
+              items = items.concat(data.results);
+              next();
+            }).catch(cb);
+          }, err => {
+            cb(err, items, fetched_results);
+          });
+        }
+      ], (error, items, fetched_results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({results: items, fetched_results: fetched_results});
+        }
+      });
     });
   }
 
