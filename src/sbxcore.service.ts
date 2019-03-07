@@ -1,9 +1,9 @@
-import QueryBuilder from 'sbx-querybuilder/index';
 import { Find, SbxCore } from 'sbxcorejs';
 import axios, {AxiosInstance} from 'axios';
 import eachLimit from 'async/eachLimit';
+import waterfall from 'async/waterfall';
 
-export class SbxCoreService extends SbxCore{
+export class SbxCoreService extends SbxCore {
 
   public static environment = { } as any;
   private headers: any;
@@ -239,12 +239,12 @@ export class AxiosFind extends Find {
   private core: SbxCoreService;
   private url;
   private isFind;
-  private totalpages;
+  private totalPages;
 
   constructor(model: string, core: SbxCoreService) {
     super(model, SbxCore.environment.domain);
     this.core = core;
-    this.totalpages = 1;
+    this.totalPages = 1;
   }
 
   public delete() {
@@ -266,51 +266,58 @@ export class AxiosFind extends Find {
    * @param {Array} toFetch Optional params to auto map fetches result.
    */
 
-  // public loadAll(toFetch = []) {
-  //   this.setPageSize(1000);
-  //   const query = this.query.compile();
-  //
-  //   return this.then().then(mergeMap<any, any>(response => {
-  //       this.totalpages = (<any>response).total_pages;
-  //       let i = 2;
-  //       const temp = [observableOf(response)];
-  //       while (i <= this.totalpages) {
-  //         const queryAux = JSON.parse(JSON.stringify(query));
-  //         queryAux.page = i;
-  //         temp.push(this.findPage(queryAux));
-  //         i = i + 1;
-  //       }
-  //       return observableMerge(temp).pipe(mergeAll(5), toArray());
-  //     }),
-  //     map(results => {
-  //       let result = [];
-  //       const fetched_results = {};
-  //       (<any>results).forEach(array => {
-  //         const v = array as any;
-  //         result = result.concat(v.results);
-  //         if (v.fetched_results) {
-  //           const objs = Object.keys(v.fetched_results);
-  //           for (let i = 0; i < objs.length; i++) {
-  //             const type_name =  objs[i];
-  //             if (!fetched_results.hasOwnProperty(type_name)) {
-  //               fetched_results[type_name] = {};
-  //             }
-  //             const keys = Object.keys(v.fetched_results[type_name]);
-  //             for (let j = 0; j < keys.length; j++) {
-  //               const key = keys[j];
-  //               if (v.fetched_results[type_name].hasOwnProperty(key)) {
-  //                 fetched_results[type_name][key] = v.fetched_results[type_name][key];
-  //               }
-  //             }
-  //           }
-  //           if (toFetch.length) {
-  //             result = this.core.mapFetchesResult(result, toFetch);
-  //           }
-  //         }
-  //       });
-  //       return {success: true, results: result, fetched_results: fetched_results};
-  //     }));
-  // }
+  public loadAll(toFetch = []) {
+    this.setPageSize(1000);
+    const query = this.query.compile();
+
+    waterfall([
+      (cb) => {
+        let items = [];
+        let fetched_results = {};
+        this.findPage(query).then(response => {
+          const data = response.data;
+          this.totalPages = data.total_pages;
+          items = items.concat(data.results);
+          if (data.fetched_results) {
+            fetched_results = data.fetched_results;
+          }
+          cb(null, items, data.total_pages, fetched_results);
+        }).catch(cb);
+      }, (items, total_pages, fetched, cb) => {
+        let fetched_results = fetched;
+
+        if (this.totalPages < 2) {
+          return cb(null, items, fetched_results);
+        }
+
+        let pages = new Array(this.totalPages).fill(0).map((_, i) => i + 1).slice(1);
+
+        eachLimit(pages, 5, (index, next) => {
+          query.page = index;
+          this.findPage(query).then(response => {
+            const data = response.data;
+            if (data.fetched_results) {
+              Object.keys(data.fetched_results).forEach(function (model) {
+                if (!fetched_results.hasOwnProperty(model)) {
+                  fetched_results[model] = {};
+                }
+                Object.assign(fetched_results[model], data.fetched_results[model]);
+              });
+            }
+            items = items.concat(data.results);
+            next();
+          }).catch(cb);
+        }, err => {
+          cb(err, items, fetched_results);
+        });
+      }
+    ], (error, items, fetched_results) => {
+      if (error) {
+        return Promise.reject(error);
+      }
+      return Promise.resolve({results: items, fetched_results: fetched_results});
+    });
+  }
 
   /**
    * Change the url, to find or to delete

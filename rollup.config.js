@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 const globals = {
   'sbx-querybuilder/index': 'QueryBuilder',
   'async/eachLimit': 'eachLimit',
+  'async/waterfall': 'waterfall',
   'axios': 'axios',
   'sbxcorejs': 'Find'
 };

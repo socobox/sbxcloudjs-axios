@@ -28,7 +28,7 @@
     "async": "^2.6.1",
     "axios": "^0.18.0",
     "sbx-querybuilder": "^1.0.8",
-    "sbxcorejs": "^1.4.0"
+    "sbxcorejs": "^1.4.1"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
