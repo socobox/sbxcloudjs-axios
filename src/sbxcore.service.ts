@@ -227,6 +227,7 @@ export class SbxCoreService extends SbxCore {
    *
    * @param {string} key
    * @param params
+   * @param test
    */
   run(key: string, params: any, test: boolean) {
     return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then(res => res.data as any);
