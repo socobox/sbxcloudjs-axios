@@ -6,8 +6,8 @@ export class SbxSessionService {
 
   constructor(private sbxCoreService: SbxCoreService) { }
 
-  public initialize(domain: number, appKey: string) {
-    this.sbxCoreService.initialize(domain, appKey);
+  public initialize(domain: number, appKey: string, baseUrl: string = 'https://sbxcloud.com/api') {
+    this.sbxCoreService.initialize(domain, appKey, baseUrl);
     this.islogged();
   }
 
