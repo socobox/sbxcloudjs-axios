@@ -51,7 +51,7 @@ export class SbxSessionService {
     this.islogged();
   }
 
-  private updateUser(data: any) {
+  public updateUser(data: any) {
     this._user.token = data.token;
     this._user.id = data.user.id;
     this._user.name = data.user.name;
