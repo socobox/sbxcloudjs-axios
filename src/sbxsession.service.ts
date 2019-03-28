@@ -30,7 +30,8 @@ export class SbxSessionService {
 
   islogged(): boolean {
     this.loadToken();
-    if (this.getCurrentUser().token) {
+    const token = this.getCurrentUser().token;
+    if (token && token !== 'null' && token !== 'undefined') {
       this.sbxCoreService.addHeaderAttr('authorization', 'Bearer ' + this.getCurrentUser().token);
       return true;
     } else {
