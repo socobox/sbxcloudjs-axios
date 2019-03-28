@@ -14,6 +14,7 @@ export class SbxCoreService extends SbxCore {
   }
 
   public initialize(domain: number, appKey: string, baseUrl: string = 'https://sbxcloud.com/api') {
+    super.initialize(domain, appKey, baseUrl);
     SbxCoreService.environment.domain = domain;
     SbxCoreService.environment.baseUrl = baseUrl;
     SbxCoreService.environment.appKey = appKey;
