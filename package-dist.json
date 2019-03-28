@@ -1,6 +1,6 @@
 {
   "name": "sbx-axios",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Sbxcore implementation with Axios",
   "keywords": [
     "sbxcore",
@@ -25,6 +25,6 @@
     "axios": "^0.18.0",
     "async": "^2.6.1",
     "sbx-querybuilder": "^1.0.8",
-    "sbxcorejs": "^1.4.2"
+    "sbxcorejs": "^1.4.3"
   }
 }
