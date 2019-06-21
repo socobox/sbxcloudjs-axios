@@ -22,6 +22,18 @@ export class SbxCoreService extends SbxCore {
 
     this.httpClient = axios.create({baseURL: baseUrl, headers: this.headers});
   }
+
+  public getAxiosInstance() {
+    return this.httpClient;
+  }
+
+  public setRequestInterceptor(interceptor) {
+    this.httpClient.interceptors.request.use(interceptor);
+  }
+
+  public setResponseInterceptor(interceptor) {
+    this.httpClient.interceptors.response.use(interceptor);
+  }
   
   public addHeaderAttr(name: string, value: string): void {
     this.headers[name] = value;
@@ -231,7 +243,13 @@ export class SbxCoreService extends SbxCore {
    * @param test
    */
   run(key: string, params: any, test: boolean) {
-    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then(res => {
+      const data = res.data as any;
+      if (data.success) {
+        throw new Error(data.message);
+      }
+      return data.response.body;
+    });
   }
 
 }
