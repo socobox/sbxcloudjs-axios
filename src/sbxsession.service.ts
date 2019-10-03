@@ -75,7 +75,7 @@ export class SbxSessionService {
   }
 
   validate(token: string) {
-    return this.sbxCoreService.validate(token).then(data => {
+    return this.sbxCoreService.validate(token).then(res => res as any).then(data => {
       if (data.success) {
         data.token = token;
         this.updateUser(data);

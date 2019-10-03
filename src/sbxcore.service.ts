@@ -21,6 +21,14 @@ export class SbxCoreService extends SbxCore {
     this.headers = {'App-Key': SbxCoreService.environment.appKey};
 
     this.httpClient = axios.create({baseURL: baseUrl, headers: this.headers});
+    this.setResponseInterceptor(res => {
+      if (res && res.data) {
+        return res.data as any;
+      }
+      return {success: false};
+    }, error => {
+      return Promise.resolve({success: false, error: error.message});
+    });
   }
 
   public getAxiosInstance() {
@@ -31,10 +39,10 @@ export class SbxCoreService extends SbxCore {
     this.httpClient.interceptors.request.use(interceptor);
   }
 
-  public setResponseInterceptor(interceptor) {
-    this.httpClient.interceptors.response.use(interceptor);
+  public setResponseInterceptor(interceptor, forError) {
+    this.httpClient.interceptors.response.use(interceptor, forError);
   }
-  
+
   public addHeaderAttr(name: string, value: string): void {
     this.headers[name] = value;
     this.updateHttpHeaders();
@@ -66,7 +74,7 @@ export class SbxCoreService extends SbxCore {
    */
   validate(token: string) {
     const params = { 'token': token };
-    return this.httpClient.get(this.$p(this.urls.validate), {params}).then(res => res.data as any);
+    return this.httpClient.get(this.$p(this.urls.validate), {params});
   }
 
   /**
@@ -83,7 +91,7 @@ export class SbxCoreService extends SbxCore {
         email: this.encodeEmails(email), domain: SbxCoreService.environment.domain.toLocaleString(),
         name: name
       };
-      return this.httpClient.get(this.$p(this.urls.register), {params}).then(res => res.data as any);
+      return this.httpClient.get(this.$p(this.urls.register), {params});
     } else {
       return new Promise((resolve) => {
         resolve({success: false, error: 'Login or email contains invalid characters. Letters, numbers and underscore are accepted'});
@@ -99,7 +107,7 @@ export class SbxCoreService extends SbxCore {
   login(login: string, password: string, domain?: number) {
     if ( (this.validateLogin(login) && login.indexOf('@') < 0) ||  (login.indexOf('@') >= 0 && this.validateEmail(login))) {
       const params = {login: this.encodeEmails(login), password: encodeURIComponent(password), domain};
-      return this.httpClient.get(this.$p(this.urls.login), {params}).then(res => res.data as any);
+      return this.httpClient.get(this.$p(this.urls.login), {params});
     }else {
       return new Promise((resolve) => {
         resolve({success: false, error: 'Login contains invalid characters. Letters, numbers and underscore are accepted'});
@@ -116,7 +124,7 @@ export class SbxCoreService extends SbxCore {
   sendPasswordRequest(userEmail: string, subject: string, emailTemplate: string) {
     const body =  {user_email: userEmail,
       domain: SbxCoreService.environment.domain, subject: subject, email_template: emailTemplate};
-    return this.httpClient.post(this.$p(this.urls.password), body).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.password), body);
   }
 
   /**
@@ -128,7 +136,7 @@ export class SbxCoreService extends SbxCore {
   requestChangePassword(userId, userCode, newPassword) {
     const body = {domain: SbxCoreService.environment.domain,
       password: newPassword, user_id: userId, code: userCode};
-    return this.httpClient.put(this.$p(this.urls.password), body).then(res => res.data as any);
+    return this.httpClient.put(this.$p(this.urls.password), body);
   }
 
   /**
@@ -137,7 +145,7 @@ export class SbxCoreService extends SbxCore {
    */
   changePassword(newPassword) {
     const params = {'domain': SbxCoreService.environment.domain, 'password': newPassword};
-    return this.httpClient.get(this.$p(this.urls.update_password), {params}).then(res => res.data as any);
+    return this.httpClient.get(this.$p(this.urls.update_password), {params});
   }
 
   /**
@@ -150,7 +158,7 @@ export class SbxCoreService extends SbxCore {
    */
   insert(model: string, data: any) {
     const body = this.upsert(model, data);
-    return this.httpClient.post(this.$p(this.urls.row), body).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.row), body);
   }
 
   /**
@@ -159,7 +167,7 @@ export class SbxCoreService extends SbxCore {
    */
   update(model: string, data: any) {
     const body = this.upsert(model, data);
-    return this.httpClient.post(this.$p(this.urls.update), body).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.update), body);
   }
 
   /**
@@ -193,7 +201,7 @@ export class SbxCoreService extends SbxCore {
     if (data.data) {
       mail.data = data.data;
     }
-    return this.httpClient.post(this.$p(this.urls.send_mail), mail).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.send_mail), mail);
   }
 
   /**
@@ -201,7 +209,7 @@ export class SbxCoreService extends SbxCore {
    */
   paymentCustomer(data: Object) {
     data['domain'] = SbxCore.environment.domain;
-    return this.httpClient.post(this.$p(this.urls.payment_customer), data).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.payment_customer), data);
   }
 
   /**
@@ -209,7 +217,7 @@ export class SbxCoreService extends SbxCore {
    */
   paymentCard(data: Object) {
     data['domain'] = SbxCore.environment.domain;
-    return this.httpClient.post(this.$p(this.urls.payment_card), data).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.payment_card), data);
   }
 
   /**
@@ -221,7 +229,7 @@ export class SbxCoreService extends SbxCore {
     const input = new FormData();
     input.append('file', file);
     input.append('model', JSON.stringify({ key: key}));
-    return this.httpClient.post(this.$p(this.urls.uploadFile), input).then(res => res.data as any);
+    return this.httpClient.post(this.$p(this.urls.uploadFile), input);
   }
 
   /**
@@ -229,7 +237,7 @@ export class SbxCoreService extends SbxCore {
    */
   downloadFile(key: string) {
     const params = {action: 'download', key: key };
-    return this.httpClient.get(this.$p(this.urls.downloadFile), {params}).then(res => res.data as any);
+    return this.httpClient.get(this.$p(this.urls.downloadFile), {params});
   }
 
   /**
@@ -256,14 +264,30 @@ export class SbxCoreService extends SbxCore {
 
 export class AxiosFind extends Find {
   private core: SbxCoreService;
+  private readonly model;
   private url;
   private isFind;
   private totalPages;
 
   constructor(model: string, core: SbxCoreService) {
     super(model, SbxCoreService.environment.domain);
+    this.model = model;
     this.core = core;
     this.totalPages = 1;
+  }
+
+  /**
+   * @param data can be a JSON, or TypeScript Class or Array of both
+   */
+  insert(data: any) {
+    return this.core.insert(this.model, data);
+  }
+
+  /**
+   * @param data can be a JSON, or TypeScript Class or Array of both
+   */
+  update(data: any) {
+    return this.core.update(this.model, data);
   }
 
   public delete() {
@@ -359,14 +383,14 @@ export class AxiosFind extends Find {
    * @param {any[]} toFetch Optional params to auto map fetches result.
    */
   private then(toFetch = []) {
-    return this.core.httpClient.post(this.url, this.query.compile()).then(res => res.data as any).then(res => {
+    return this.core.httpClient.post(this.url, this.query.compile()).then(res => res as any).then(res => {
       if (res.success) {
         if (toFetch.length && this.isFind) {
           return this.core.mapFetchesResult(res, toFetch);
         }
         return res;
       }else {
-        throw new Error(res.message);
+        throw new Error(res.message || res.error || "There was an error. Please try again later.");
       }
     });
   }
