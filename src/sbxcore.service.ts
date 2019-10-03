@@ -251,9 +251,8 @@ export class SbxCoreService extends SbxCore {
    * @param test
    */
   run(key: string, params: any, test: boolean) {
-    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then(res => {
-      const data = res.data as any;
-      if (data.success) {
+    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then((data: any) => {
+      if (!data.success) {
         throw new Error(data.message);
       }
       return data.response.body;
@@ -383,7 +382,7 @@ export class AxiosFind extends Find {
    * @param {any[]} toFetch Optional params to auto map fetches result.
    */
   private then(toFetch = []) {
-    return this.core.httpClient.post(this.url, this.query.compile()).then(res => res as any).then(res => {
+    return this.core.httpClient.post(this.url, this.query.compile()).then((res: any) => {
       if (res.success) {
         if (toFetch.length && this.isFind) {
           return this.core.mapFetchesResult(res, toFetch);
