@@ -253,7 +253,7 @@ export class SbxCoreService extends SbxCore {
   run(key: string, params: any, test: boolean) {
     return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then((data: any) => {
       if (!data.success) {
-        throw new Error(data.message);
+        return {success: false, error: data.message || data.error || "There was an error. Please try again later."};
       }
       return data.response.body;
     });
@@ -317,15 +317,14 @@ export class AxiosFind extends Find {
         (cb) => {
           let items = [];
           let fetched_results = {};
-          this.findPage(query).then(response => {
-            const data = response.data;
+          this.findPage(query).then((data: any) => {
             this.totalPages = data.total_pages;
             items = items.concat(data.results);
             if (data.fetched_results) {
               fetched_results = data.fetched_results;
             }
             cb(null, items, data.total_pages, fetched_results);
-          }).catch(cb);
+          });
         }, (items, total_pages, fetched, cb) => {
           let fetched_results = fetched;
 
@@ -337,8 +336,7 @@ export class AxiosFind extends Find {
 
           eachLimit(pages, 5, (index, next) => {
             query.page = index;
-            this.findPage(query).then(response => {
-              const data = response.data;
+            this.findPage(query).then((data: any) => {
               if (data.fetched_results) {
                 Object.keys(data.fetched_results).forEach(function (model) {
                   if (!fetched_results.hasOwnProperty(model)) {
@@ -376,7 +374,6 @@ export class AxiosFind extends Find {
     this.url = isFind ? this.core.$p(this.core.urls.find) : this.core.$p(this.core.urls.delete);
   }
 
-
   /**
    * get the data
    * @param {any[]} toFetch Optional params to auto map fetches result.
@@ -389,7 +386,7 @@ export class AxiosFind extends Find {
         }
         return res;
       }else {
-        throw new Error(res.message || res.error || "There was an error. Please try again later.");
+        return {success: false, error: res.message || res.error || "There was an error. Please try again later."};
       }
     });
   }
@@ -399,7 +396,7 @@ export class AxiosFind extends Find {
    * @param query
    */
   private findPage(query?: any) {
-    return this.core.httpClient.post(this.core.$p(this.core.urls.find), query ? query : this.query.compile() );
+    return this.core.httpClient.post(this.core.$p(this.core.urls.find), query ? query : this.query.compile());
   }
 }
 

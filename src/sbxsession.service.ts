@@ -66,8 +66,8 @@ export class SbxSessionService {
    */
 
   login(login: string, password: string, domain?: number) {
-    return this.sbxCoreService.login(login, password, domain).then(data => {
-      if ((<any>data).success) {
+    return this.sbxCoreService.login(login, password, domain).then((data: any) => {
+      if (data.success) {
         this.updateUser(data);
       }
       return data;
@@ -75,7 +75,7 @@ export class SbxSessionService {
   }
 
   validate(token: string) {
-    return this.sbxCoreService.validate(token).then(res => res as any).then(data => {
+    return this.sbxCoreService.validate(token).then(res => res as any).then((data: any) => {
       if (data.success) {
         data.token = token;
         this.updateUser(data);
@@ -91,8 +91,8 @@ export class SbxSessionService {
   }
 
   signUp(login: string, email: string, name: string, password: string) {
-    return this.sbxCoreService.signUp(login, email, name, password).then(data => {
-      if ((<any>data).success) {
+    return this.sbxCoreService.signUp(login, email, name, password).then((data: any) => {
+      if (data.success) {
         this.updateUser(data);
       }
       return data;
