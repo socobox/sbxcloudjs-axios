@@ -1,8 +1,7 @@
 import {SbxCoreService} from './sbxcore.service';
+import {User} from "./models";
 
 export class SbxSessionService {
-
-  private _user: User;
 
   constructor(private sbxCoreService: SbxCoreService) { }
 
@@ -25,7 +24,7 @@ export class SbxSessionService {
    */
 
   getCurrentUser(): User {
-    return (this._user == null) ? this._user = new User() : this._user;
+    return this.sbxCoreService.getCurrentUser();
   }
 
   islogged(): boolean {
@@ -53,11 +52,12 @@ export class SbxSessionService {
   }
 
   public updateUser(data: any) {
-    this._user.token = data.token;
-    this._user.id = data.user.id;
-    this._user.name = data.user.name;
-    this._user.login = data.user.login;
-    this._user.email = data.user.email;
+    const user = this.getCurrentUser();
+    user.token = data.token;
+    user.id = data.user.id;
+    user.name = data.user.name;
+    user.login = data.user.login;
+    user.email = data.user.email;
     this.updateToken(data.token);
   }
 
@@ -87,7 +87,7 @@ export class SbxSessionService {
   logout(): void {
     window.localStorage.removeItem('token');
     this.sbxCoreService.removeHeaderAttr('token');
-    this._user = null;
+    this.sbxCoreService.removeCurrentUser();
   }
 
   signUp(login: string, email: string, name: string, password: string) {
@@ -99,56 +99,4 @@ export class SbxSessionService {
     });
   }
 
-}
-
-export class User {
-
-  constructor() {
-  }
-
-  private _name: string;
-  private _login: string;
-  private _token: string;
-  private _id: number;
-  private _email: string;
-
-  get name(): string {
-    return this._name;
-  }
-
-  set name(value: string) {
-    this._name = value;
-  }
-
-  get token(): string {
-    return this._token;
-  }
-
-  set token(value: string) {
-    this._token = value;
-  }
-
-  get id(): number {
-    return this._id;
-  }
-
-  set id(value: number) {
-    this._id = value;
-  }
-
-  get email(): string {
-    return this._email;
-  }
-
-  set email(value: string) {
-    this._email = value;
-  }
-
-  get login(): string {
-    return this._login;
-  }
-
-  set login(value: string) {
-    this._login = value;
-  }
 }

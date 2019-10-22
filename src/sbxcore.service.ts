@@ -2,11 +2,13 @@ import { Find, SbxCore } from 'sbxcorejs';
 import axios, {AxiosInstance} from 'axios';
 import eachLimit from 'async/eachLimit';
 import waterfall from 'async/waterfall';
+import {EmailData, User} from "./models";
 
 export class SbxCoreService extends SbxCore {
 
   public static environment = { } as any;
   private headers: any;
+  private _user: User;
   public httpClient: AxiosInstance;
 
   constructor() {
@@ -29,6 +31,14 @@ export class SbxCoreService extends SbxCore {
     }, error => {
       return Promise.resolve({success: false, error: error.message});
     });
+  }
+
+  public getCurrentUser() {
+    return (this._user == null) ? this._user = new User() : this._user;
+  }
+
+  public removeCurrentUser() {
+    this._user = null;
   }
 
   public getAxiosInstance() {
@@ -149,6 +159,25 @@ export class SbxCoreService extends SbxCore {
   }
 
   /**
+   * change password
+   * @param {string} newPassword
+   */
+  changeMyPassword(currentPassword: string, newPassword: string) {
+    const data = {id: this._user.id, domain: 0, current_password: currentPassword, password: newPassword};
+    return this.httpClient.post(this.$p(this.urls.update_password), data);
+  }
+
+  /**
+   * change user password
+   * @param {number} userId
+   * @param {string} newPassword
+   */
+  changeUserPassword(userId: number, newPassword: string) {
+    const data = {domain: SbxCoreService.environment.domain, id: userId, password: newPassword};
+    return this.httpClient.post(this.$p(this.urls.update_password), data);
+  }
+
+  /**
    * DATA
    */
 
@@ -221,6 +250,75 @@ export class SbxCoreService extends SbxCore {
   }
 
   /**
+   * CLOUDSCRIPT
+   */
+
+  /**
+   *
+   * @param {string} key
+   * @param params
+   * @param test
+   */
+  run(key: string, params: any, test: boolean) {
+    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then((data: any) => {
+      if (!data.success) {
+        return {success: false, error: data.message || data.error || "There was an error. Please try again later."};
+      }
+      return data.response.body;
+    });
+  }
+
+  /**
+   * FOLDER
+   */
+
+  /**
+   *
+   * @param {string} parentKey
+   * @param {string} name
+   */
+  createFolder(parentKey: string, name: string) {
+    const params = {parent_key: parentKey, name};
+    return this.httpClient.post(this.$p(this.urls.addFolder), {}, {params});
+  }
+
+  /**
+   *
+   * @param {string} key
+   */
+  deleteFolder(key: string) {
+    const params = {key};
+    return this.httpClient.post(this.$p(this.urls.deleteFolder), {}, {params});
+  }
+
+  /**
+   *
+   * @param {string} key
+   */
+  listFolder(key: string) {
+    const params = {key};
+    return this.httpClient.get(this.$p(this.urls.folderList), {params});
+  }
+
+  /**
+   *
+   * @param {string} key
+   * @param {string} name
+   */
+  renameFolder(key: string, name: string) {
+    return this.renameFolderOrFile(key, name);
+  }
+
+  /**
+   *
+   * @param {string} key
+   * @param {string} name
+   */
+  renameFile(key: string, name: string) {
+    return this.renameFolderOrFile(key, name);
+  }
+
+  /**
    *
    * @param {string} key
    * @param file
@@ -240,23 +338,9 @@ export class SbxCoreService extends SbxCore {
     return this.httpClient.get(this.$p(this.urls.downloadFile), {params});
   }
 
-  /**
-   * CLOUDSCRIPT
-   */
-
-  /**
-   *
-   * @param {string} key
-   * @param params
-   * @param test
-   */
-  run(key: string, params: any, test: boolean) {
-    return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then((data: any) => {
-      if (!data.success) {
-        return {success: false, error: data.message || data.error || "There was an error. Please try again later."};
-      }
-      return data.response.body;
-    });
+  private renameFolderOrFile(key: string, name: string) {
+    const params = {key, name};
+    return this.httpClient.get(this.$p(this.urls.addFolder), {}, {params});
   }
 
 }
@@ -398,15 +482,4 @@ export class AxiosFind extends Find {
   private findPage(query?: any) {
     return this.core.httpClient.post(this.core.$p(this.core.urls.find), query ? query : this.query.compile());
   }
-}
-
-export interface EmailData {
-  subject: string;
-  from: string;
-  template?: string;
-  template_key?: string;
-  data?: any;
-  to: string|Array<string>;
-  bcc?: string|Array<string>;
-  cc?: string|Array<string>;
 }
