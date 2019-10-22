@@ -340,7 +340,7 @@ export class SbxCoreService extends SbxCore {
 
   private renameFolderOrFile(key: string, name: string) {
     const params = {key, name};
-    return this.httpClient.get(this.$p(this.urls.addFolder), {}, {params});
+    return this.httpClient.get(this.$p(this.urls.addFolder), {params});
   }
 
 }
