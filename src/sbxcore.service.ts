@@ -257,9 +257,9 @@ export class SbxCoreService extends SbxCore {
    *
    * @param {string} key
    * @param params
-   * @param test
+   * @param {boolean} [test=false]
    */
-  run(key: string, params: any, test: boolean) {
+  run(key: string, params: any, test?: boolean = false) {
     return this.httpClient.post(this.$p(this.urls.cloudscript_run), {key: key, params: params, test}).then((data: any) => {
       if (!data.success) {
         return {success: false, error: data.message || data.error || "There was an error. Please try again later."};
