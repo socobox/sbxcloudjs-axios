@@ -1,5 +1,5 @@
 import { Find, SbxCore } from 'sbxcorejs';
-import axios, {AxiosInstance} from 'axios';
+import axios, {AxiosInstance, AxiosPromise} from 'axios';
 import eachLimit from 'async/eachLimit';
 import waterfall from 'async/waterfall';
 import {EmailData, User} from "./models";
@@ -97,7 +97,7 @@ export class SbxCoreService extends SbxCore {
   signUp(login: string, email: string, name: string, password: string) {
     if (this.validateLogin(login) && this.validateEmail(email)) {
       const params = {
-        login: this.encodeEmails(login), password: encodeURIComponent(password),
+        login: this.encodeEmails(login), password: password,
         email: this.encodeEmails(email), domain: SbxCoreService.environment.domain.toLocaleString(),
         name: name
       };
@@ -116,7 +116,7 @@ export class SbxCoreService extends SbxCore {
    */
   login(login: string, password: string, domain?: number) {
     if ( (this.validateLogin(login) && login.indexOf('@') < 0) ||  (login.indexOf('@') >= 0 && this.validateEmail(login))) {
-      const params = {login: this.encodeEmails(login), password: encodeURIComponent(password), domain};
+      const params = {login: this.encodeEmails(login), password: password, domain};
       return this.httpClient.get(this.$p(this.urls.login), {params});
     }else {
       return new Promise((resolve) => {
