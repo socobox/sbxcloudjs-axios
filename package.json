@@ -1,8 +1,8 @@
 {
   "name": "sbx-axios",
-  "version": "1.3.8",
+  "version": "1.4.0",
   "description": "Sbxcore implementation with Axios",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "clean": "rimraf .tmp && rimraf dist/*",
     "transpile": "tsc",

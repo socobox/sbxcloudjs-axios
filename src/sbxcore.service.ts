@@ -10,6 +10,7 @@ export class SbxCoreService extends SbxCore {
   private headers: any;
   private _user: User;
   public httpClient: AxiosInstance;
+  public httpLoginClient: AxiosInstance;
 
   constructor() {
     super();
@@ -23,6 +24,7 @@ export class SbxCoreService extends SbxCore {
     this.headers = {'App-Key': SbxCoreService.environment.appKey};
 
     this.httpClient = axios.create({baseURL: baseUrl, headers: this.headers});
+    this.httpLoginClient = axios.create({baseURL: baseUrl});
     this.setResponseInterceptor(res => {
       if (res && res.data) {
         return res.data as any;
@@ -47,10 +49,12 @@ export class SbxCoreService extends SbxCore {
 
   public setRequestInterceptor(interceptor) {
     this.httpClient.interceptors.request.use(interceptor);
+    this.httpLoginClient.interceptors.request.use(interceptor);
   }
 
   public setResponseInterceptor(interceptor, forError) {
     this.httpClient.interceptors.response.use(interceptor, forError);
+    this.httpLoginClient.interceptors.response.use(interceptor, forError);
   }
 
   public addHeaderAttr(name: string, value: string): void {
@@ -114,10 +118,10 @@ export class SbxCoreService extends SbxCore {
    * @param {string} password
    * @param {number} domain
    */
-  login(login: string, password: string, domain?: number) {
+  login(login: string, password: string, domain: number = SbxCoreService.environment.domain) {
     if ( (this.validateLogin(login) && login.indexOf('@') < 0) ||  (login.indexOf('@') >= 0 && this.validateEmail(login))) {
       const params = {login: this.encodeEmails(login), password: password, domain};
-      return this.httpClient.get(this.$p(this.urls.login), {params});
+      return this.httpLoginClient.get(this.$p(this.urls.login), {params});
     }else {
       return new Promise((resolve) => {
         resolve({success: false, error: 'Login contains invalid characters. Letters, numbers and underscore are accepted'});

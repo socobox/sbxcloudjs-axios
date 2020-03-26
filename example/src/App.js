@@ -1,22 +1,33 @@
-import React, {useState} from 'react';
-
+import React, {Fragment, useState} from 'react';
+import env from './Environment';
 import {SbxCoreService, SbxSessionService} from 'sbx-axios';
 
 const sbxCoreService = new SbxCoreService();
 const sbxSessionService = new SbxSessionService(sbxCoreService);
-sbxSessionService.initialize(process.env.REACT_APP_DOMAIN, process.env.REACT_APP_APP_KEY);
-sbxCoreService.addHeaderAttr('authorization', 'Bearer ' + process.env.REACT_APP_TOKEN);
+sbxSessionService.initializeWithEnvironment(env);
 
 const App = () => {
   const [data, setData] = useState('{}');
-  sbxCoreService.with('app').loadAll().then(res => {
-    setData(JSON.stringify(res));
-  });
+  const [login, setLogin] = useState('{}');
+
+  if (login === '{}') {
+    sbxSessionService.login(env.user, env.password).then(res => {
+      setLogin(JSON.stringify(res));
+      sbxCoreService.with('app').loadAll().then(res => {
+        setData(JSON.stringify(res));
+      });
+    });
+  }
 
   return (
-    <code>
-      {data}
-    </code>
+    <Fragment>
+      <code>
+        {login}
+      </code>
+      <code>
+        {data}
+      </code>
+    </Fragment>
   );
 };
 

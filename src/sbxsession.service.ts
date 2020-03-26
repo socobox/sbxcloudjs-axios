@@ -43,11 +43,11 @@ export class SbxSessionService {
    */
 
   private loadToken(): void {
-    this.getCurrentUser().token = window.localStorage.getItem('token');
+    this.getCurrentUser().token = window.localStorage.getItem(SbxCoreService.environment.appKey + '_token');
   }
 
   public updateToken(token: string): void {
-    window.localStorage.setItem('token', token);
+    window.localStorage.setItem(SbxCoreService.environment.appKey + '_token', token);
     this.islogged();
   }
 
@@ -85,7 +85,7 @@ export class SbxSessionService {
   }
 
   logout(): void {
-    window.localStorage.removeItem('token');
+    window.localStorage.removeItem(SbxCoreService.environment.appKey + '_token');
     this.sbxCoreService.removeHeaderAttr('token');
     this.sbxCoreService.removeCurrentUser();
   }

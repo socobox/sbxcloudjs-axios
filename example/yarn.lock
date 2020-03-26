@@ -6772,7 +6772,7 @@ sax@^1.2.1, sax@~1.2.1:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-"sbx-axios@link:..":
+"sbx-axios@link:../dist":
   version "0.0.0"
   uid ""
 
