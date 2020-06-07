@@ -329,7 +329,7 @@ async-each@^1.0.1:
   resolved "https://registry.yarnpkg.com/async-each/-/async-each-1.0.3.tgz#b727dbf87d7651602f06f4d4ac387f47d91b0cbf"
   integrity sha512-z/WhQ5FPySLdvREByI2vZiTWwCnF0moMJ1hK9YQwDTHKh6I7/uSckMetoRGb5UBZPC1z0jlw+n/XCgjeH7y1AQ==
 
-async@^2.1.2, async@^2.1.4, async@^2.4.1, async@^2.6.1, async@^2.6.2:
+async@^2.1.2, async@^2.1.4, async@^2.4.1, async@^2.6.2:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
   integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
@@ -6774,17 +6774,6 @@ sax@^1.2.1, sax@~1.2.1:
 
 "sbx-axios@link:../dist":
   version "0.0.0"
-  uid ""
-
-sbx-querybuilder@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/sbx-querybuilder/-/sbx-querybuilder-1.0.8.tgz#9a2350d76d5ac20957bd6dc36b925114f7b65146"
-  integrity sha512-kGyLKaXJMhQLF4hR4nFI2dEAohcJYNR9vhJFIYncQjPTdZjH8duyvjmIaDio9HroNRitI5iKpoPbc7bPkalYUw==
-
-sbxcorejs@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/sbxcorejs/-/sbxcorejs-1.4.5.tgz#731a500b733c22c2834f4ab01b921bef46f47426"
-  integrity sha512-ph7F1+2T4TxNyPBXF8nDSF5MGj55gKb8XQb6gMePeIXXM6VjKcvitBqhs4pS/woMLDN3r7BLfkdMtiDwI77p3g==
 
 scheduler@^0.18.0:
   version "0.18.0"
@@ -7925,9 +7914,9 @@ websocket-driver@>=0.5.1:
     websocket-extensions ">=0.1.1"
 
 websocket-extensions@>=0.1.1:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
-  integrity sha512-nqHUnMXmBzT0w570r2JpJxfiSD1IzoI+HGVdd3aZ0yNi3ngvQ4jv1dtHt5VGxfI2yj5yqImPhOK4vmIh2xMbGg==
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
+  integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
 whatwg-encoding@^1.0.1:
   version "1.0.5"
