@@ -7,7 +7,7 @@ export class SbxSessionService {
 
   public initialize(domain: number, appKey: string, baseUrl: string = 'https://sbxcloud.com/api') {
     this.sbxCoreService.initialize(domain, appKey, baseUrl);
-    this.islogged();
+    this.isLogged();
   }
 
   /**
@@ -16,7 +16,7 @@ export class SbxSessionService {
    */
   public initializeWithEnvironment(environment: any) {
     this.sbxCoreService.initialize(environment.domain, environment.appKey, environment.baseUrl);
-    this.islogged();
+    this.isLogged();
   }
 
   /**
@@ -27,15 +27,22 @@ export class SbxSessionService {
     return this.sbxCoreService.getCurrentUser();
   }
 
-  islogged(): boolean {
+  isLogged(): boolean {
+    const token = this.getToken();
+    if (token) {
+      this.sbxCoreService.addHeaderAttr('authorization', 'Bearer ' + token);
+      return true;
+    }
+    return false;
+  }
+
+  getToken(): string | null {
     this.loadToken();
     const token = this.getCurrentUser().token;
     if (token && token !== 'null' && token !== 'undefined') {
-      this.sbxCoreService.addHeaderAttr('authorization', 'Bearer ' + this.getCurrentUser().token);
-      return true;
-    } else {
-      return false;
+      return token;
     }
+    return null;
   }
 
   /**
@@ -48,7 +55,7 @@ export class SbxSessionService {
 
   public updateToken(token: string): void {
     window.localStorage.setItem(SbxCoreService.environment.appKey + '_token', token);
-    this.islogged();
+    this.isLogged();
   }
 
   public updateUser(data: any) {
