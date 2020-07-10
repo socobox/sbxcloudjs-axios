@@ -424,7 +424,7 @@ export class AxiosFind extends Find {
 
           eachLimit(pages, 5, (index, next) => {
             query.page = index;
-            this.findPage(query).then((data: any) => {
+            this.findPage({...query}).then((data: any) => {
               if (data.fetched_results) {
                 Object.keys(data.fetched_results).forEach(function (model) {
                   if (!fetched_results.hasOwnProperty(model)) {
