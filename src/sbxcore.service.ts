@@ -447,7 +447,7 @@ export class AxiosFind extends Find {
           if (toFetch.length) {
             items = this.core.mapFetchesResult({results: items, fetched_results}, toFetch).results;
           }
-          resolve({results: items, fetched_results: fetched_results});
+          resolve({results: items, fetched_results: fetched_results, success: true});
         }
       });
     });
