@@ -6,24 +6,16 @@ const sbxCoreService = new SbxCoreService();
 const sbxSessionService = new SbxSessionService(sbxCoreService);
 sbxSessionService.initializeWithEnvironment(env);
 
-const App = () => {
+const App = () => {sbxSessionService.updateToken(env.token);
+  sbxCoreService.with('app').loadAll().then(res => {
+    setData(JSON.stringify(res));
+  });
   const [data, setData] = useState('{}');
-  const [login, setLogin] = useState('{}');
 
-  if (login === '{}') {
-    sbxSessionService.login(env.user, env.password).then(res => {
-      setLogin(JSON.stringify(res));
-      sbxCoreService.with('app').loadAll().then(res => {
-        setData(JSON.stringify(res));
-      });
-    });
-  }
+
 
   return (
     <Fragment>
-      <code>
-        {login}
-      </code>
       <code>
         {data}
       </code>

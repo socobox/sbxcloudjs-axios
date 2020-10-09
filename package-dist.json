@@ -1,5 +1,5 @@
 {
-  "name": "sbx-axios",
+  "name": "sbx-axios-node",
   "version": "1.4.3",
   "description": "Sbxcore implementation with Axios",
   "keywords": [
