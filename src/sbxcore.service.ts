@@ -354,25 +354,27 @@ export class AxiosFind extends Find {
   private url;
   private isFind;
   private totalPages;
+  private readonly currentModel;
 
   constructor(model: string, core: SbxCoreService) {
     super(model, SbxCoreService.environment.domain);
     this.core = core;
     this.totalPages = 1;
+    this.currentModel = model;
   }
 
   /**
    * @param data can be a JSON, or TypeScript Class or Array of both
    */
   insert(data: any) {
-    return this.core.insert(this.getModel() as string, data);
+    return this.core.insert(this.currentModel, data);
   }
 
   /**
    * @param data can be a JSON, or TypeScript Class or Array of both
    */
   update(data: any) {
-    return this.core.update(this.getModel() as string, data);
+    return this.core.update(this.currentModel, data);
   }
 
   public delete() {

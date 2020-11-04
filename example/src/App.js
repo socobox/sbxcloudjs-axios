@@ -25,9 +25,7 @@ const App = () => {
         sbxCoreService.with('app').insert(first).then();
 
         const query = sbxCoreService.with('app');
-
-        console.log(query.getModel());
-        console.log(query.getModel(console.log));
+        query.getModel(console.log).andWhereIsEqualTo('config', 'asd').loadAll().then();
 
       });
     });

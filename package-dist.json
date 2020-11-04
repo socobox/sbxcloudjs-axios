@@ -24,7 +24,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "sbx-querybuilder": "^1.0.8",
-    "sbxcorejs": "^1.4.6"
+    "sbxcorejs": "^1.4.7"
   },
   "peerDependencies": {
     "axios": "^0.18.0"
