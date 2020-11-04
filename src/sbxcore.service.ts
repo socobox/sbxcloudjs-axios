@@ -351,14 +351,12 @@ export class SbxCoreService extends SbxCore {
 
 export class AxiosFind extends Find {
   private core: SbxCoreService;
-  private readonly model;
   private url;
   private isFind;
   private totalPages;
 
   constructor(model: string, core: SbxCoreService) {
     super(model, SbxCoreService.environment.domain);
-    this.model = model;
     this.core = core;
     this.totalPages = 1;
   }
@@ -367,14 +365,14 @@ export class AxiosFind extends Find {
    * @param data can be a JSON, or TypeScript Class or Array of both
    */
   insert(data: any) {
-    return this.core.insert(this.model, data);
+    return this.core.insert(this.getModel() as string, data);
   }
 
   /**
    * @param data can be a JSON, or TypeScript Class or Array of both
    */
   update(data: any) {
-    return this.core.update(this.model, data);
+    return this.core.update(this.getModel() as string, data);
   }
 
   public delete() {

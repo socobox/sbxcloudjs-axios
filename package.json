@@ -1,6 +1,6 @@
 {
   "name": "sbx-axios",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Sbxcore implementation with Axios",
   "main": "index.js",
   "scripts": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "sbx-querybuilder": "^1.0.8",
-    "sbxcorejs": "^1.4.5"
+    "sbxcorejs": "^1.4.6"
   },
   "peerDependencies": {
     "axios": "^0.18.0"

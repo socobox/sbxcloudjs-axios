@@ -15,6 +15,20 @@ const App = () => {
       setLogin(JSON.stringify(res));
       sbxCoreService.with('app').loadAll().then(res => {
         setData(JSON.stringify(res));
+
+        const first = res.results[0];
+        first.name = 'testing update => ' + Math.random();
+        delete first._META;
+        sbxCoreService.with('app').update(first).then();
+        first.name = 'testing insert => ' + Math.random();
+        delete first._KEY;
+        sbxCoreService.with('app').insert(first).then();
+
+        const query = sbxCoreService.with('app');
+
+        console.log(query.getModel());
+        console.log(query.getModel(console.log));
+
       });
     });
   }
