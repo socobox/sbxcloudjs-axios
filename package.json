@@ -1,6 +1,6 @@
 {
   "name": "sbx-axios",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Sbxcore implementation with Axios",
   "main": "index.js",
   "scripts": {
