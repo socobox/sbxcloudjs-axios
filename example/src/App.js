@@ -18,8 +18,9 @@ const App = () => {
 
         const first = res.results[0];
         first.name = 'testing update => ' + Math.random();
+        first.config = null;
         delete first._META;
-        sbxCoreService.with('app').update(first).then();
+        sbxCoreService.with('app').update(first, true).then();
         first.name = 'testing insert => ' + Math.random();
         delete first._KEY;
         sbxCoreService.with('app').insert(first).then();

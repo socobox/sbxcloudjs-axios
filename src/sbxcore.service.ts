@@ -188,8 +188,9 @@ export class SbxCoreService extends SbxCore {
   /**
    * @param {string} model the name model in sbxcloud
    * @param data can be a JSON, or TypeScript Class or Array of both
+   * @param letNull enable null values in objects
    */
-  insert(model: string, data: any) {
+  insert(model: string, data: any, letNull: boolean = false) {
     const body = this.upsert(model, data);
     return this.httpClient.post(this.$p(this.urls.row), body);
   }
@@ -197,9 +198,10 @@ export class SbxCoreService extends SbxCore {
   /**
    * @param {string} model the name model in sbxcloud
    * @param data can be a JSON, or TypeScript Class or Array of both
+   * @param letNull enable null values in objects
    */
-  update(model: string, data: any) {
-    const body = this.upsert(model, data);
+  update(model: string, data: any, letNull: boolean = false) {
+    const body = this.upsert(model, data, letNull);
     return this.httpClient.post(this.$p(this.urls.update), body);
   }
 
@@ -365,16 +367,18 @@ export class AxiosFind extends Find {
 
   /**
    * @param data can be a JSON, or TypeScript Class or Array of both
+   * @param letNull enable null values in objects
    */
-  insert(data: any) {
-    return this.core.insert(this.currentModel, data);
+  insert(data: any, letNull: boolean = false) {
+    return this.core.insert(this.currentModel, data, letNull);
   }
 
   /**
    * @param data can be a JSON, or TypeScript Class or Array of both
+   * @param letNull enable null values in objects
    */
-  update(data: any) {
-    return this.core.update(this.currentModel, data);
+  update(data: any, letNull: boolean = false) {
+    return this.core.update(this.currentModel, data, letNull);
   }
 
   public delete() {
