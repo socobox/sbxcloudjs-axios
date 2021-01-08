@@ -427,8 +427,9 @@ export class AxiosFind extends Find {
           let pages = new Array(this.totalPages).fill(0).map((_, i) => i + 1).slice(1);
 
           eachLimit(pages, 5, (index, next) => {
-            query.page = index;
-            this.findPage({...query}).then((data: any) => {
+            const copyQuery = {...query};
+            copyQuery.page = index;
+            this.findPage(copyQuery).then((data: any) => {
               if (data.fetched_results) {
                 Object.keys(data.fetched_results).forEach(function (model) {
                   if (!fetched_results.hasOwnProperty(model)) {
